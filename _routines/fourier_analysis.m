@@ -131,16 +131,16 @@ for t = 1 :length(time)
                 
                 K_2(j)     = 2*rho_i*g*integral(I_overburden,1,d(j))/sqrt(pi*d(j));
                 
-                % Addition of water pressure filling the crevasse
-                if d(j) > a
-                    K_3(j) = 2*rho_w*g*integral(I_waterpress,a,d(j))/sqrt(pi*d(j));
-                else
-                    K_3 (j) = 0;
-                end
+%                 % Addition of water pressure filling the crevasse
+%                 if d(j) > a
+%                     K_3(j) = 2*rho_w*g*integral(I_waterpress,a,d(j))/sqrt(pi*d(j));
+%                 else
+%                     K_3 (j) = 0;
+%                 end
                 
                 K_1(j) = F(d(j)/H).*Normal_stress(i,t).*sqrt(pi.*d(j));
                 
-                K_net(j) = (K_1(j) + K_2(j) + K_3(j) )/1000;
+                K_net(j) = (K_1(j) + K_2(j) )/1000;
                 
                 %                 %% Bottom Crevasses
                 %
