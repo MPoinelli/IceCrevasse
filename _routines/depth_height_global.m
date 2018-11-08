@@ -21,10 +21,10 @@
 clear all,  clc, close all
 
 %% Load parameters & shape file
-run ../_physical_parameters/Europa_physics.m
-run ../_physical_parameters/Europa_LEFM_parameters.m
+run Europa_physics.m
+run Europa_LEFM_parameters.m
 
-S = shaperead('../_target_features/Features_smoothed.shp');
+S = shaperead('Features_smoothed.shp');
 NAME = struct2cell(S);
 
 %% TIME STEP and GRID

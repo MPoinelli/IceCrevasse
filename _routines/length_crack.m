@@ -8,10 +8,10 @@
 % vector LENGTH containing the lengths of the crevasses
 
 %% Load parameters & shape file
-run ../_physical_parameters/Europa_physics.m
-run ../_physical_parameters/Europa_LEFM_parameters.m
+run Europa_physics.m
+run Europa_LEFM_parameters.m
 
-S = shaperead('../_target_features/Features_smoothed.shp');
+S = shaperead('Features_smoothed.shp');
 
 %% Lenght loop
 for q = 1:26
@@ -92,5 +92,5 @@ for q = 1:26
      
     Name = strcat(num2str(S(q).Name));
     DONE = strcat(num2str(S(q).Name),'''s calculated length is :',num2str(ceil(LENGTH(q))),' km');
-    disp(DONE)
+    %disp(DONE)
 end
