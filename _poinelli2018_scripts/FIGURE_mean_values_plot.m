@@ -1,5 +1,5 @@
 % Mattia Poinelli
-% JPL, May 2017
+% JPL, May 2017 %%%%% UPDATED JULY 2018 FOR THE PAPER %%%%%%
 
 % VISUALISATION OF GLOBAL MAP for different purposes
 % Currently loading: mean global depths.
@@ -25,18 +25,7 @@ theta    = 90 - [0:20:180]; theta_rad = deg2rad(theta); % latitudes
 % c.Limits = [0 70];
 % c.FontName = 'latex';
 
-xt = get (gca,'XTick');
-yt = get (gca,'YTick');
- 
-for k=1:numel(xt);
-xt1{k}=sprintf('%d°',xt(k));
-end
- 
-for k=1:numel(yt);
-yt1{k}=sprintf('%d°',yt(k));
-end
-
-% Load Raster & plot map
+%% Load Raster & plot map
 [raster] = imread('Europa_raster_coarse.jpg');
 S = shaperead('Features_smoothed.shp');
 
@@ -83,6 +72,8 @@ tightmap, gridm on
 geoshow([S([1,2,5,6,12,15,16,21,24]).Y],[S([1,2,5,6,12,15,16,21,24]).X]+180,...
     'Color','white','Linewidth',2)
 
+
+%% Adding names to the map
 NUMBERS = [1 2 5 6 4 9 8 7 3];
 j=0;
 for i =[1,2,5,6,12,15,16,21,24]
