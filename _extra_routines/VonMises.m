@@ -60,7 +60,7 @@ end
 [raster] = imread('Europa_raster_coarse.jpg');
 S = shaperead('Features_smoothed.shp');
 
- VM (1,:) =  max(max(VM)); VM (end,: ) =  max(max(VM));
+VM (1,:) =  max(max(VM)); VM (end,: ) =  max(max(VM));
 
 figure(1),hold on
 %set(figure(1),'units','pixels','position',[0,500,2200,1250])
@@ -85,6 +85,3 @@ c.FontName = 'latex';
 
 geoshow([S(:).Y],[S(:).X]+180,...
     'Color','cyan','Linewidth',2)
-%
-% %profile viewer
-% saveas(figure(1),'GlobalDepth','png')
