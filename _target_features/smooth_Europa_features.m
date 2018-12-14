@@ -8,7 +8,7 @@ theta    = 90 - [0:1:180]; theta_rad = deg2rad(theta); % latitudes
 phi      = [0:1:360];  phi_rad = deg2rad(phi);         % longitudes
 
 % Load Raster & plot map
-[raster] = geotiffread('Europa_raster');
+[raster] = imread('Europa_raster_coarse.jpg');
 
 figure(1),hold on
 set(figure(1),'units','pixels','position',[0,500,1000,500])
