@@ -348,11 +348,11 @@ for q = 1:26 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from
     
 end
 % 
-% figure,title('zPropagation rate')
-% plot(TIME,PROPAGATION_RATES)
-% 
-% figure, title('Opening rate')
-% plot(TIME,OPENING_RATE)
-% 
-% figure
-% plot3(TIME,PROPAGATION_RATES,OPENING_RATE)
+
+k = 1;
+
+figure,hold on,title('zPropagation rate')
+plot(CRACK(k).TIME,CRACK(k).PROPAGATION_RATES)
+
+figure,hold on,title('Opening rate')
+plot(CRACK(k).TIME,CRACK(k).OPENING_RATE)
