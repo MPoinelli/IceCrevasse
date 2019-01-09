@@ -350,9 +350,8 @@ end
 % 
 
 k = 1;
-
+xx = S(k).X; xx = xx(~isnan(xx));
+yy = S(k).Y; yy = yy(~isnan(yy));
+    
 figure,hold on,title('zPropagation rate')
-plot(CRACK(k).TIME,CRACK(k).PROPAGATION_RATES)
-
-figure,hold on,title('Opening rate')
-plot(CRACK(k).TIME,CRACK(k).OPENING_RATE)
+plot(xx,CRACK(k).PROPAGATION_RATES)
