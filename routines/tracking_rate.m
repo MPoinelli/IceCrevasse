@@ -131,7 +131,10 @@ for q = 1:26 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from
     yy = S(q).Y; yy = yy(~isnan(yy));
     END = length(xx);
     Perc_completion (q) = 100;
-
+    
+    CRACK(q).XX = xx;
+    CRACK(q).YY = yy;
+    
     % loop on the feature
     for i = 1:END
         
