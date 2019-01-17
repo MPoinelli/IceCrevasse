@@ -303,6 +303,11 @@ for q = 1:26 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from
                 % Ten cycles have passed, Feature has stopped to propagate
                 check = -1;
                 END = i;
+                
+                % No propagation
+                delta (i) = 0;
+                opening_rate(i) = 0;
+                V_rate(i) = 0;
 
             else
                 % not propagation, time passes 
