@@ -98,30 +98,10 @@ load('Critical_depths_file.mat')
 depth = depth(:,:,1:end-2);
 Mean_depth = mean(depth,3);
 
-% map
-% figure('Units','inches','Position',[0 0 9 4.5],'PaperPositionMode','auto')
-% 
-% axesm ('eqdcylin');
-% axesm('MapProjection','eqdcylin','FontName','times','FontSize',11,...
-%     'MapLatLimit',[-70 70],'MapLonLimit', [10 350],...
-%     'LabelFormat','none',...
-%     'MLabelLocation',30,'PLabelLocation',30)
-% tightmap
-% 
-% mlabel ('south'), plabel on
-% [lon,lat] = meshgrid(phi,theta);
-% geoshow(lat,lon+180,raster);
-
-% generation of coarse grid
-% useful only when dealing with mean depths
-
 phi      = [0:20:360]; phi_rad = deg2rad(phi);          % longitudes
 theta    = 90 - [0:20:180]; theta_rad = deg2rad(theta); % latitudes
-%  contourm (theta,phi,Mean_depth,'LevelStep',3,'ShowText','off','Linewidth',1.3);
-% % 
-%  geoshow([S(1:end).Y],[S(1:end).X]+180,...
-%      'Color','black','Linewidth',2)
-for q = 1:26 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from the shape file
+
+for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from the shape file
     
     time = 0;
     TIME = [];
