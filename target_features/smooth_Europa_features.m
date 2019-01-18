@@ -1,6 +1,8 @@
 % Mattia Poinelli
 % JPL, April 2017
 % Visualization of Digitalised Features and Smoothing elaboration
+% TO SAVE the smoothed version uncomment 'shapewrite' line
+% REMEMBER TO COMMENT WHEN DONE
 
 clear all, close all, clc
 
