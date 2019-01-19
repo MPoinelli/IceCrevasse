@@ -17,14 +17,14 @@ set(figure(1),'units','pixels','position',[0,500,1000,500])
 axesm ('eqdcylin', 'Frame', 'on', 'Grid', 'on','MapLatLim',[-75,75],'MapLonLim',[-360,0]);
 framem on, gridm on, mlabel on, plabel on
 [lon,lat] = meshgrid(phi,theta); 
-geoshow(lat,lon,raster);
+geoshow(lat,lon+180,raster);
 
-S = shaperead('Features.shp');% ,...
-
+S = shaperead('Cycloids.shp');% ,...
 C = struct2cell(S);
 
 [m,n] = size(C);
 
+% Generation of multiple nodes
 for i = 1 : n 
     X = C{3,i}; X = X(~isnan(X));
     Y = C{4,i}; Y = Y(~isnan(Y));
@@ -35,7 +35,9 @@ for i = 1 : n
     S(i).Y = yy;
 end
 
+
+
 %% UNCOMMENT if the smoothed shapefile is desired
-%shapewrite(S,'Features_smoothed.shp')
+%shapewrite(S,'Cycloids_smoothed.shp')
 geoshow([S(:).Y],[S(:).X]+180,...
     'DisplayType','Point','Marker','.','Color','red')
