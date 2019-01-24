@@ -112,6 +112,7 @@ for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from 
     END = length(xx);
     Perc_completion (q) = 100;
     Standby(q) = 0;
+    Length_crevasse(q) = 0;
     
     CRACK(q).XX = xx;
     CRACK(q).YY = yy;
@@ -186,7 +187,10 @@ for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from 
             
             angular_distance (i) = c;
         end
-                
+        
+        % Crevasse length
+        Length_crevasse(q) = Length_crevasse(q) + angular_distance (i)*R;
+        
         %% TIME LOOP FOR FINDING ACTIVITY
         while check > 0 
 
@@ -310,6 +314,7 @@ for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from 
             CRACK(q).PROPAGATION_RATES = V_rate;
             CRACK(q).OPENING_RATE = opening_rate;
             CRACK(q).WIDTH = delta;
+            CRACK(q).LENGTH = Length_crevasse(q);
             CRACK(q).TIME = TIME;
             CRACK(q).STANDBY = Standby(q);
             CRACK(q).EPSILON_DOT = epsilon_dot;
