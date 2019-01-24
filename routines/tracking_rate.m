@@ -111,6 +111,7 @@ for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from 
     yy = S(q).Y; yy = yy(~isnan(yy));
     END = length(xx);
     Perc_completion (q) = 100;
+    Standby(q) = 0;
     
     CRACK(q).XX = xx;
     CRACK(q).YY = yy;
@@ -294,6 +295,7 @@ for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from 
                 check = 1;
                 time = time + 1800;
                 clear a 
+                Standby(q) = Standby(q) + 1800;
             end
             
         end
@@ -309,6 +311,7 @@ for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from 
             CRACK(q).OPENING_RATE = opening_rate;
             CRACK(q).WIDTH = delta;
             CRACK(q).TIME = TIME;
+            CRACK(q).STANDBY = Standby(q);
             CRACK(q).EPSILON_DOT = epsilon_dot;
             XX = xx;
             YY = yy;
