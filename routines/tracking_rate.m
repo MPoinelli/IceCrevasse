@@ -5,7 +5,7 @@
 
 %clear all,  clc, close all
 % profile on
-
+pizzi
 %% LOADING DATA
 
 % Parameters
@@ -98,10 +98,11 @@ load('Critical_depths_file.mat')
 depth = depth(:,:,1:end-2);
 Mean_depth = mean(depth,3);
 
-phi      = [0:20:360]; phi_rad = deg2rad(phi);          % longitudes
-theta    = 90 - [0:20:180]; theta_rad = deg2rad(theta); % latitudes
+phi      = [0:1:360]; phi_rad = deg2rad(phi);          % longitudes
+theta    = 90 - [0:1:180]; theta_rad = deg2rad(theta); % latitudes
 
-for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from the shape file
+%% LEFM LOOP
+for q = 1:6  %selection of a the feature from the shape file
     
     time = 0;
     TIME = [];
@@ -186,16 +187,17 @@ for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from 
             Norm_ve(2,i) = ROT(2,2,i);
             
             angular_distance (i) = c;
+            
         end
         
         % Crevasse length
         Length_crevasse(q) = Length_crevasse(q) + angular_distance (i)*R;
         
         %% TIME LOOP FOR FINDING ACTIVITY
-        while check > 0 
-
+        while check > 0
+            
             a = angular_distance(i)*R;
-                    
+            
             % Diurnal and secular stress evaluation as Jara-Orue, 2011
             SIGMA_COTHETA = sigma_theta (time,deg2rad(90 - yy(1:i)),deg2rad(xx(1:i)));
             SIGMA_PHI     = sigma_phi   (time,deg2rad(90 - yy(1:i)),deg2rad(xx(1:i)));
@@ -321,19 +323,19 @@ for q = 1:5 % 1:26% [1,2,5,6,12,15,16,21,24] %  selection of a the feature from 
             XX = xx;
             YY = yy;
             
-            % Problem with Phoenix linea
-            if q ==24
-               time = TIME(end)-TIME(1);
-            end
+%             % Problem with Phoenix linea
+%             if q ==24
+%                time = TIME(end)-TIME(1);
+%             end
             
-            LEGEND{q} = num2str(S(q).Name);
+            %LEGEND{q} = num2str(S(q).Name);
             Cycles_to_build(q) = time/T_europa;
             Max_opening_width(q) = max(delta);
             Max_opening_rate (q) = max(opening_rate); % m/s
             Max_prop_rate(q) = max(V_rate);
             Mean_prop_rate (q) = a/time;%*3600/1000; 
                        
-            clear a delta opening_rate time_step V_rate Normal_stress epsilon_dot epsilon 
+            clear a delta opening_rate time_step V_rate Normal_stress epsilon_dot epsilon
             clear SIGMA_COTHETA SIGMA_PHI TAU STRAIN
             clear D_SIGMA_COTHETA D_SIGMA_PHI D_TAU d_STRAIN
             clear xx yy
