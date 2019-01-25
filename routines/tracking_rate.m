@@ -112,7 +112,6 @@ for q = 1:6  %selection of a the feature from the shape file
     yy = S(q).Y; yy = yy(~isnan(yy));
     END = length(xx);
     Perc_completion (q) = 100;
-    Standby(q) = 0;
     Length_crevasse(q) = 0;
     
     CRACK(q).XX = xx;
@@ -123,6 +122,7 @@ for q = 1:6  %selection of a the feature from the shape file
         
         START = time;
         check = 1;
+        Standby = 0;
         %% Rotation matrices
         if i == length(xx)
             % last node of the grid has the same charateristic of the
@@ -301,11 +301,12 @@ for q = 1:6  %selection of a the feature from the shape file
                 check = 1;
                 time = time + 1800;
                 clear a 
-                Standby(q) = Standby(q) + 1800;
+                Standby = Standby + 1800;
+                
             end
             
         end
-        
+        CRACK(q).STANDBY(i) = Standby;
         % time step for finalising the shaped segment
         time_step(i) = angular_distance(i)*R/2/V_rate(i);
         
