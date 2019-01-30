@@ -23,6 +23,9 @@ S = shaperead('Cycloids.shp');% ,...
 C = struct2cell(S);
 
 [m,n] = size(C);
+% Number of Nodes
+% 100, 1000 or 10000
+Nodes = 1000;
 
 % Generation of multiple nodes
 for i = 1 : n
@@ -31,7 +34,7 @@ for i = 1 : n
     [X, index] = unique(X);
     
     
-    [pt] = interparc(10000,X,Y,'linear');
+    [pt] = interparc(Nodes,X,Y,'linear');
     
     
     %     xx = X(1): 0.01 : X(end);
