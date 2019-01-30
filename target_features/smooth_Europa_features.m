@@ -25,19 +25,44 @@ C = struct2cell(S);
 [m,n] = size(C);
 
 % Generation of multiple nodes
-for i = 1 : n 
+for i = 1 : n
     X = C{3,i}; X = X(~isnan(X));
     Y = C{4,i}; Y = Y(~isnan(Y));
-    [X, index] = unique(X); 
-    xx = X(1): 0.1 : X(end);
-    yy = spline(X, Y(index), xx);
-    S(i).X = xx;
-    S(i).Y = yy;
+    [X, index] = unique(X);
+    
+    
+    [pt] = interparc(10000,X,Y,'linear');
+    
+    
+    %     xx = X(1): 0.01 : X(end);
+    %     yy = spline(X, Y(index), xx);
+    S(i).X = pt(:,1)';
+    S(i).Y = pt(:,2)';
+    
+    % Cycloid numbering problem
+    if i == 2
+        xx_save = pt(:,1)';
+        yy_save = pt(:,2)';
+    elseif i == 5
+        S(5).X = xx_save;
+        S(5).Y = yy_save;
+        S(2).X = pt(:,1)';
+        S(2).Y = pt(:,2)';
+    elseif i == 6
+        S(6).X = xx_save;
+        S(6).Y = yy_save;
+        S(5).X = pt(:,1)';
+        S(5).Y = pt(:,2)';
+    end
+    clear pt
 end
 
-
-
 %% UNCOMMENT if the smoothed shapefile is desired
-%shapewrite(S,'Cycloids_smoothed.shp')
+
+shapewrite(S,'Cycloids_smoothed10000.shp')
 geoshow([S(:).Y],[S(:).X]+180,...
-    'DisplayType','Point','Marker','.','Color','red')
+    'DisplayType','Point','Marker','o','Color','red')
+
+for i= 1:n
+    textm ([S(i).Y(1)],[S(i).X(1)]+180,num2str(i))
+end
