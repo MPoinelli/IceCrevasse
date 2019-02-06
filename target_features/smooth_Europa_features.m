@@ -25,7 +25,7 @@ C = struct2cell(S);
 [m,n] = size(C);
 % Number of Nodes
 % 100, 1000 or 10000
-Nodes = 1000;
+% Nodes = 3000;
 
 % Generation of multiple nodes
 for i = 1 : n
