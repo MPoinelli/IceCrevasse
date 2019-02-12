@@ -288,9 +288,10 @@ for q = 1:6  %selection of a the feature from the shape file
                 % propagation
                 check = -1;
                 
-            elseif time - START >= 20* T_europa
-                STRING = strcat('Feature formed at :',num2str(floor(i/END*100)),'%');
-                %disp(STRING)
+                clear a
+            elseif time - START >= 2* T_europa
+                STRING = strcat('Feature :',num2str(q),' formed at :',num2str(floor(i/END*100)),'%, node',num2str(i));
+                disp(STRING)
                 Perc_completion (q) = floor(i/END*100);
                 
                 % Ten cycles have passed, Feature has stopped to propagate
