@@ -103,7 +103,7 @@ theta    = 90 - [0:1:180]; theta_rad = deg2rad(theta); % latitudes
 
 %% LEFM LOOP
 for q = 1:6  %selection of a the feature from the shape file
-    
+    disp('Beginning simulation crack'), q
     time = 0;
     TIME = [];
     
@@ -315,18 +315,23 @@ for q = 1:6  %selection of a the feature from the shape file
         CRACK(q).STANDBY(i) = Standby;
         % time step for finalising the shaped segment
         time_step(i) = angular_distance(i)*R/2/V_rate(i);
+        Segment(i) = angular_distance(i)*R;
         
         time = time + time_step(i);
         TIME = [TIME,time];
        
         if i == END % End of the feature
+            disp('End simulation')
             CRACK(q).PROPAGATION_RATES = V_rate;
             CRACK(q).OPENING_RATE = opening_rate;
             CRACK(q).WIDTH = delta;
             CRACK(q).LENGTH = Length_crevasse(q);
+            CRACK(q).MEAN_SEGMENT = mean(angular_distance)*R;
+            CRACK(q).SEGMENT = Segment;
             CRACK(q).TIME = TIME;
-            CRACK(q).STANDBY = Standby(q);
             CRACK(q).EPSILON_DOT = epsilon_dot;
+            CRACK(q).SEGMENTOPEN = segment_open;
+            CRACK(q).STRESS = Normal_stress;
             XX = xx;
             YY = yy;
             
