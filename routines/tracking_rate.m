@@ -144,6 +144,8 @@ for q = 1:6  %selection of a the feature from the shape file
             epsilon_dot(i) = epsilon_dot (i-1);
             epsilon(i)     = epsilon     (i-1);
             
+            theta_Mohr (i) = theta_Mohr(i-1);
+            
         elseif yy(i+1) > yy(i) % 'ascending' feature
             % evaluation of useful angles a,b
             b_ang(i) = deg2rad(xx(i+1) - xx(i));
@@ -165,6 +167,9 @@ for q = 1:6  %selection of a the feature from the shape file
             Norm_ve(2,i) = ROT(2,2,i);
             
             angular_distance (i) = c;
+            
+            theta_Mohr(i) = pi - A;
+            CRACK(q).ASCENDING(i) = 1;
             
         elseif yy(i+1) < yy(i)% 'descending' feature
             % evaluation of useful angles a,b
@@ -188,6 +193,8 @@ for q = 1:6  %selection of a the feature from the shape file
             
             angular_distance (i) = c;
             
+            theta_Mohr (i) = A;
+            CRACK(q).ASCENDING(i) = 0;
         end
         
         % Crevasse length
@@ -236,32 +243,31 @@ for q = 1:6  %selection of a the feature from the shape file
             d_STRAIN_R (:,:,i) = ROT(:,:,i) * d_STRAIN(:,:,i) * ROT(:,:,i)';
             
             % Normal and Shear Stress & Derivatives
-            Normal_stress   (i) = T_R(2,2,i);
-            d_Normal_stress (i) = d_T_R(2,2,i);
+            Normal_stress   (i) = T_R(1,1,i);
+            d_Normal_stress (i) = d_T_R(1,2,i);
             Shear_stress    (i) = T_R(1,2,i);
             d_Shear_stress  (i) = d_T_R(1,2,i);
             
             % Normal displacement rate
-            epsilon_dot     (i) = d_STRAIN_R(2,2,i);
-            epsilon(i) = STRAIN_R(2,2,i);
+            epsilon_dot     (i) = d_STRAIN_R(1,1,i);
+            epsilon(i) = STRAIN_R(1,1,i);
             
             % Normal stress for the rest of the feature at this Time
-            % Multiplication of Matrices
-            N_S_feat = ROT(2,1,:).^2.*T(1,1,:)+ROT(2,1,:).*ROT(2,2,:).*(T(2,1,:)+T(1,2,:))+...
-                ROT(2,2,:).^2.*T(2,2,:);
-               
-            if i ~= 1              
-                for j = i-1:-1:1 % check which part of the crack is active
-                    
-                    if N_S_feat(j) > 0
+            % Mohr Circles
+            Sigma_N_MOHR   (1:i) = 1/2 .* (SIGMA_COTHETA+SIGMA_PHI) + ...
+                1/2 .* (SIGMA_PHI - SIGMA_COTHETA) .* cos(2.*theta_Mohr(1:i)) + ...
+                TAU .* sin (2.*theta_Mohr(1:i));
+      
+            if i ~= 1
+                for j = i-1:-1:1
+                    if Sigma_N_MOHR(j) > 0 && a < 150e3 % limitation at a = 150 km;
                         a = a + angular_distance(j)*R;
                     else
                         break
                     end
-                    
                 end
+                
             end
-            
             % geometrical factor as Tada, 2000
             b = a/0.7;
             
