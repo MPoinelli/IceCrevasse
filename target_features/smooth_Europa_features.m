@@ -4,7 +4,7 @@
 % TO SAVE the smoothed version uncomment 'shapewrite' line
 % REMEMBER TO COMMENT WHEN DONE
 
-clear all, close all, clc
+%clear all, close all, clc
 
 theta    = 90 - [0:1:180]; theta_rad = deg2rad(theta); % latitudes
 phi      = [0:1:360];  phi_rad = deg2rad(phi);         % longitudes
@@ -25,7 +25,7 @@ C = struct2cell(S);
 [m,n] = size(C);
 % Number of Nodes
 % 100, 1000 or 10000
-% Nodes = 3000;
+ Nodes = 3000;
 
 % Generation of multiple nodes
 for i = 1 : n
@@ -62,7 +62,7 @@ end
 
 %% UNCOMMENT if the smoothed shapefile is desired
 
-shapewrite(S,'Cycloids_smoothed10000.shp')
+%shapewrite(S,'Cycloids_smoothed3000.shp')
 geoshow([S(:).Y],[S(:).X]+180,...
     'DisplayType','Point','Marker','o','Color','red')
 

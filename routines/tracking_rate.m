@@ -103,7 +103,7 @@ theta    = 90 - [0:1:180]; theta_rad = deg2rad(theta); % latitudes
 
 %% LEFM LOOP
 for q = 1:6  %selection of a the feature from the shape file
-    
+    disp('Beginning simulation crack'), q
     time = 0;
     TIME = [];
     
@@ -144,6 +144,8 @@ for q = 1:6  %selection of a the feature from the shape file
             epsilon_dot(i) = epsilon_dot (i-1);
             epsilon(i)     = epsilon     (i-1);
             
+            theta_Mohr (i) = theta_Mohr(i-1);
+            
         elseif yy(i+1) > yy(i) % 'ascending' feature
             % evaluation of useful angles a,b
             b_ang(i) = deg2rad(xx(i+1) - xx(i));
@@ -165,6 +167,9 @@ for q = 1:6  %selection of a the feature from the shape file
             Norm_ve(2,i) = ROT(2,2,i);
             
             angular_distance (i) = c;
+            
+            theta_Mohr(i) = pi - A;
+            CRACK(q).ASCENDING(i) = 1;
             
         elseif yy(i+1) < yy(i)% 'descending' feature
             % evaluation of useful angles a,b
@@ -188,6 +193,8 @@ for q = 1:6  %selection of a the feature from the shape file
             
             angular_distance (i) = c;
             
+            theta_Mohr (i) = A;
+            CRACK(q).ASCENDING(i) = 0;
         end
         
         % Crevasse length
@@ -236,32 +243,31 @@ for q = 1:6  %selection of a the feature from the shape file
             d_STRAIN_R (:,:,i) = ROT(:,:,i) * d_STRAIN(:,:,i) * ROT(:,:,i)';
             
             % Normal and Shear Stress & Derivatives
-            Normal_stress   (i) = T_R(2,2,i);
-            d_Normal_stress (i) = d_T_R(2,2,i);
+            Normal_stress   (i) = T_R(1,1,i);
+            d_Normal_stress (i) = d_T_R(1,2,i);
             Shear_stress    (i) = T_R(1,2,i);
             d_Shear_stress  (i) = d_T_R(1,2,i);
             
             % Normal displacement rate
-            epsilon_dot     (i) = d_STRAIN_R(2,2,i);
-            epsilon(i) = STRAIN_R(2,2,i);
+            epsilon_dot     (i) = d_STRAIN_R(1,1,i);
+            epsilon(i) = STRAIN_R(1,1,i);
             
             % Normal stress for the rest of the feature at this Time
-            % Multiplication of Matrices
-            N_S_feat = ROT(2,1,:).^2.*T(1,1,:)+ROT(2,1,:).*ROT(2,2,:).*(T(2,1,:)+T(1,2,:))+...
-                ROT(2,2,:).^2.*T(2,2,:);
-               
-            if i ~= 1              
-                for j = i-1:-1:1 % check which part of the crack is active
-                    
-                    if N_S_feat(j) > 0
+            % Mohr Circles
+            Sigma_N_MOHR   (1:i) = 1/2 .* (SIGMA_COTHETA+SIGMA_PHI) + ...
+                1/2 .* (SIGMA_PHI - SIGMA_COTHETA) .* cos(2.*theta_Mohr(1:i)) + ...
+                TAU .* sin (2.*theta_Mohr(1:i));
+      
+            if i ~= 1
+                for j = i-1:-1:1
+                    if Sigma_N_MOHR(j) > 0 && a < 150e3 % limitation at a = 150 km;
                         a = a + angular_distance(j)*R;
                     else
                         break
                     end
-                    
                 end
+                
             end
-            
             % geometrical factor as Tada, 2000
             b = a/0.7;
             
@@ -271,7 +277,7 @@ for q = 1:6  %selection of a the feature from the shape file
             % opening diplacement and rate (from elasticity theory)
             delta (i) = 4* Normal_stress(i)*a*V(a,b)/E;
             opening_rate(i) = delta (i) * epsilon_dot(i); % approximation
-            
+            segment_open(i) = a;
             % Propagation rate from the derivative of displacement control
             V_rate(i) =  (E/4*opening_rate(i) - d_Normal_stress(i)*a*V(a,b))/...
                 (Normal_stress(i)*V(a,b) + Normal_stress(i)*a*dV(a,b));
@@ -282,9 +288,10 @@ for q = 1:6  %selection of a the feature from the shape file
                 % propagation
                 check = -1;
                 
-            elseif time - START >= 20* T_europa
-                STRING = strcat('Feature formed at :',num2str(floor(i/END*100)),'%');
-                %disp(STRING)
+                clear a
+            elseif time - START >= 2* T_europa
+                STRING = strcat('Feature :',num2str(q),' formed at :',num2str(floor(i/END*100)),'%, node',num2str(i));
+                disp(STRING)
                 Perc_completion (q) = floor(i/END*100);
                 
                 % Ten cycles have passed, Feature has stopped to propagate
@@ -309,18 +316,23 @@ for q = 1:6  %selection of a the feature from the shape file
         CRACK(q).STANDBY(i) = Standby;
         % time step for finalising the shaped segment
         time_step(i) = angular_distance(i)*R/2/V_rate(i);
+        Segment(i) = angular_distance(i)*R;
         
         time = time + time_step(i);
         TIME = [TIME,time];
        
         if i == END % End of the feature
+            disp('End simulation')
             CRACK(q).PROPAGATION_RATES = V_rate;
             CRACK(q).OPENING_RATE = opening_rate;
             CRACK(q).WIDTH = delta;
             CRACK(q).LENGTH = Length_crevasse(q);
+            CRACK(q).MEAN_SEGMENT = mean(angular_distance)*R;
+            CRACK(q).SEGMENT = Segment;
             CRACK(q).TIME = TIME;
-            CRACK(q).STANDBY = Standby(q);
             CRACK(q).EPSILON_DOT = epsilon_dot;
+            CRACK(q).SEGMENTOPEN = segment_open;
+            CRACK(q).STRESS = Normal_stress;
             XX = xx;
             YY = yy;
             
@@ -330,13 +342,14 @@ for q = 1:6  %selection of a the feature from the shape file
 %             end
             
             %LEGEND{q} = num2str(S(q).Name);
-            Cycles_to_build(q) = time/T_europa;
-            Max_opening_width(q) = max(delta);
-            Max_opening_rate (q) = max(opening_rate); % m/s
-            Max_prop_rate(q) = max(V_rate);
-            Mean_prop_rate (q) = a/time;%*3600/1000; 
+%             Cycles_to_build(q) = time/T_europa;
+%             Max_opening_width(q) = max(delta);
+%             Max_opening_rate (q) = max(opening_rate); % m/s
+%             Max_prop_rate(q) = max(V_rate);
+%             Mean_prop_rate (q) = a/time;%*3600/1000; 
                        
-            clear a delta opening_rate time_step V_rate Normal_stress epsilon_dot epsilon
+            clear a delta opening_rate time_step V_rate epsilon_dot epsilon
+            clear TIME Segment segment_open Normal_stress
             clear SIGMA_COTHETA SIGMA_PHI TAU STRAIN
             clear D_SIGMA_COTHETA D_SIGMA_PHI D_TAU d_STRAIN
             clear xx yy
@@ -346,11 +359,172 @@ for q = 1:6  %selection of a the feature from the shape file
     end
     
 end
-% 
 
-k = 1;
+% %% HISTOGRAM PLOT
+% ACTIVITY = [CRACK.PROPAGATION_RATES];
+% figure('Units','inches','Position',[0 0 3.5 3.5],'PaperPositionMode','auto')
+% hold on, grid on
+% histogram(log10(ACTIVITY))
+% xl1 = xlabel('log(Propagation Rate [m/s])');
+% yl1 = ylabel('Number of Nodes');
+% 
+% set(xl1,'Fontsize',9,'Interpreter','Latex')
+% set(yl1,'Fontsize',9,'Interpreter','Latex')
+% %set(gca,'xscale','log')
+
+%% PROPAGATION RATE PLOT
+figure('Units','inches','Position',[0 0 7.25 7.25],'PaperPositionMode','auto'), hold on
+
+% C1
+subplot(3,2,1),hold on, grid on, k = 1;
 xx = S(k).X; xx = xx(~isnan(xx));
 yy = S(k).Y; yy = yy(~isnan(yy));
-    
-figure,hold on,title('zPropagation rate')
-plot(xx,CRACK(k).PROPAGATION_RATES)
+
+plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
+%plot(CRACK(k).XX,(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
+%plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX))./3.6)
+xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
+
+tit = title('Cycloid 1');
+yl2 = ylabel('Propagation rate [m/s]');
+%le2 = legend ('Model','Mean Results','Hoppa 1999');
+
+set(tit,'Fontsize',9,'Interpreter','Latex')
+set(xl2,'Fontsize',9,'Interpreter','Latex')
+set(yl2,'Fontsize',9,'Interpreter','Latex')
+%set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthWest')
+
+set(gca,'Fontsize',9)
+% 
+% Cycloid 2
+subplot(3,2,3), hold on, grid on, k = 2;
+xx = S(k).X; xx = xx(~isnan(xx));
+yy = S(k).Y; yy = yy(~isnan(yy));
+plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
+% plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
+% plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
+xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
+
+tit = title('Cycloid 2');
+yl2 = ylabel('Propagation rate [m/s]');
+%le2 = legend ('Model','Mean Results','Hoppa 1999');
+
+set(tit,'Fontsize',9,'Interpreter','Latex')
+set(xl2,'Fontsize',9,'Interpreter','Latex')
+set(yl2,'Fontsize',9,'Interpreter','Latex')
+%set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
+
+set(gca,'Fontsize',9)
+
+% Cycloid 3
+subplot(3,2,5), hold on, grid on, k = 3;
+xx = S(k).X; xx = xx(~isnan(xx));
+yy = S(k).Y; yy = yy(~isnan(yy));
+plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
+% plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
+% plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
+xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
+
+tit = title('Cycloid 3');
+yl2 = ylabel('Propagation rate [m/s]');
+%le2 = legend ('Model','Mean Results','Hoppa 1999');
+
+set(tit,'Fontsize',9,'Interpreter','Latex')
+set(xl2,'Fontsize',9,'Interpreter','Latex')
+set(yl2,'Fontsize',9,'Interpreter','Latex')
+%set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
+
+set(gca,'Fontsize',9)
+
+% Delphi Flexus
+subplot(3,2,2), hold on, grid on, k = 4;
+xx = S(k).X; xx = xx(~isnan(xx));
+yy = S(k).Y; yy = yy(~isnan(yy));
+plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
+% plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
+% plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
+xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
+
+tit = title('Delphi Flexus');
+%yl2 = ylabel('Propagation rate [km/hr]');
+le2 = legend ('Model','Mean Results','Hoppa 1999');
+
+set(tit,'Fontsize',9,'Interpreter','Latex')
+set(xl2,'Fontsize',9,'Interpreter','Latex')
+%set(yl2,'Fontsize',9,'Interpreter','Latex')
+set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthWest')
+
+set(gca,'Fontsize',9)
+
+% Sidon Flexus
+subplot(3,2,4), hold on, grid on, k = 5;
+xx = S(k).X; xx = xx(~isnan(xx));
+yy = S(k).Y; yy = yy(~isnan(yy));
+plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
+% plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
+% plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
+xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
+
+tit = title('Sidon Flexus');
+%yl2 = ylabel('Propagation rate [km/hr]');
+%le2 = legend ('Model','Mean Results','Hoppa 1999');
+
+set(tit,'Fontsize',9,'Interpreter','Latex')
+set(xl2,'Fontsize',9,'Interpreter','Latex')
+%set(yl2,'Fontsize',9,'Interpreter','Latex')
+%set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
+
+set(gca,'Fontsize',9)
+
+% Cilicia Flexus
+subplot(3,2,6), hold on, grid on, k = 6;
+xx = S(k).X; xx = xx(~isnan(xx));
+yy = S(k).Y; yy = yy(~isnan(yy));
+plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
+% plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
+% plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
+xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
+
+tit = title('Cilicia Flexus');
+%yl2 = ylabel('Propagation rate [km/hr]');
+%le2 = legend ('Model','Mean Results','Hoppa 1999');
+
+set(tit,'Fontsize',9,'Interpreter','Latex')
+set(xl2,'Fontsize',9,'Interpreter','Latex')
+%set(yl2,'Fontsize',9,'Interpreter','Latex')
+%set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
+
+set(gca,'Fontsize',9)
+% 
+% figure, scatter (CRACK(1).XX,CRACK(1).YY,8,CRACK(1).STANDBY,'filled'),colorbar
+% figure, scatter (CRACK(2).XX,CRACK(2).YY,8,CRACK(2).STANDBY,'filled'),colorbar
+% figure, scatter (CRACK(3).XX,CRACK(3).YY,8,CRACK(3).STANDBY,'filled'),colorbar
+% figure, scatter (CRACK(4).XX,CRACK(4).YY,8,CRACK(4).STANDBY,'filled'),colorbar
+% figure, scatter (CRACK(5).XX,CRACK(5).YY,8,CRACK(5).STANDBY,'filled'),colorbar
+% figure, scatter (CRACK(6).XX,CRACK(6).YY,8,CRACK(6).STANDBY,'filled'),colorbar
+
+%     figure,
+%     loglog(CRACK(k).TIME./(3600*24*30),CRACK(k).PROPAGATION_RATES)
+%     grid on, xlabel('log(time [months])'),ylabel('log(propagation rate [m/s])')
+
+% %% MAP PLOT
+% 
+% figure('Units','inches','Position',[0 0 7.25 3.5],'PaperPositionMode','auto'), hold on
+% axesm('MapProjection','eqdcylin','FontName','times','FontSize',10,...
+%     'MapLatLimit',[-70 70],'MapLonLimit', [0 360],...
+%     'LabelFormat','none',...
+%     'MLabelLocation',50,'PLabelLocation',50)
+% 
+% framem on, mlabel ('south'), plabel on
+% [lon,lat] = meshgrid(phi,theta);
+% geoshow(lat,lon+180,raster);
+% tightmap
+% 
+% for q = 1:6
+%     figure(3),hold on
+%     h = scatterm (CRACK(q).YY,CRACK(q).XX + 180,40,CRACK(q).PROPAGATION_RATES,'filled');
+%     textm (CRACK(q).YY(1),CRACK(q).XX(1) + 180,num2str(q))
+% end
+% c = colorbar;
+% c.FontName = 'Helvetica';
+% c.Location = 'EastOutside';
