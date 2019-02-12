@@ -277,7 +277,7 @@ for q = 1:6  %selection of a the feature from the shape file
             % opening diplacement and rate (from elasticity theory)
             delta (i) = 4* Normal_stress(i)*a*V(a,b)/E;
             opening_rate(i) = delta (i) * epsilon_dot(i); % approximation
-            
+            segment_open(i) = a;
             % Propagation rate from the derivative of displacement control
             V_rate(i) =  (E/4*opening_rate(i) - d_Normal_stress(i)*a*V(a,b))/...
                 (Normal_stress(i)*V(a,b) + Normal_stress(i)*a*dV(a,b));
@@ -341,13 +341,14 @@ for q = 1:6  %selection of a the feature from the shape file
 %             end
             
             %LEGEND{q} = num2str(S(q).Name);
-            Cycles_to_build(q) = time/T_europa;
-            Max_opening_width(q) = max(delta);
-            Max_opening_rate (q) = max(opening_rate); % m/s
-            Max_prop_rate(q) = max(V_rate);
-            Mean_prop_rate (q) = a/time;%*3600/1000; 
+%             Cycles_to_build(q) = time/T_europa;
+%             Max_opening_width(q) = max(delta);
+%             Max_opening_rate (q) = max(opening_rate); % m/s
+%             Max_prop_rate(q) = max(V_rate);
+%             Mean_prop_rate (q) = a/time;%*3600/1000; 
                        
-            clear a delta opening_rate time_step V_rate Normal_stress epsilon_dot epsilon
+            clear a delta opening_rate time_step V_rate epsilon_dot epsilon
+            clear TIME Segment segment_open Normal_stress
             clear SIGMA_COTHETA SIGMA_PHI TAU STRAIN
             clear D_SIGMA_COTHETA D_SIGMA_PHI D_TAU d_STRAIN
             clear xx yy
