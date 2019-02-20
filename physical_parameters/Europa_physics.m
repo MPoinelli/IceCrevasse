@@ -22,7 +22,7 @@ Bulk_Modulus = 9.3e9;    % [Pa]  Bulk modulus
 mu = 3.487e9;            % [Pa]  rigidity 
 E = 9*Bulk_Modulus*mu/...
     (3*Bulk_Modulus+mu); % [Pa]  Youngs modulus
-eta = 10^22;             % [Pas] Viscosity
+eta = 10^21;             % [Pas] Viscosity
 nu = E/(2*mu)-1;         % [~]   Poisson ratio
 
 h_d = 1.151;           % Love number diurnal
