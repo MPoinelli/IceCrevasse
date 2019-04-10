@@ -282,6 +282,9 @@ for q = 1:6  %selection of a the feature from the shape file
             V_rate(i) =  (E/4*opening_rate(i) - d_Normal_stress(i)*a*V(a,b))/...
                 (Normal_stress(i)*V(a,b) + Normal_stress(i)*a*dV(a,b));
             
+            % Mohr normal stress (check)
+            Normal_stress_M (i) = Sigma_N_MOHR(i);
+            
             %% PROPAGATION CHECK
                             
             if K_I(i) > TOU*1000 && V_rate(i) > 0 
@@ -333,6 +336,7 @@ for q = 1:6  %selection of a the feature from the shape file
             CRACK(q).EPSILON_DOT = epsilon_dot;
             CRACK(q).SEGMENTOPEN = segment_open;
             CRACK(q).STRESS = Normal_stress;
+            CRACK(q).STRESS_M = Normal_stress_M;
             XX = xx;
             YY = yy;
             
