@@ -306,9 +306,9 @@ for q = 1:6  %selection of a the feature from the shape file
             else
                 % not propagation, time passes 
                 check = 1;
-                time = time + 1800;
+                time = time + 900;
                 clear a 
-                Standby = Standby + 1800;
+                Standby = Standby + 900;
                 
             end
             
