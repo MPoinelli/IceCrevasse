@@ -377,10 +377,11 @@ end
 % %set(gca,'xscale','log')
 
 %% PROPAGATION RATE PLOT
-figure('Units','inches','Position',[0 0 7.25 7.25],'PaperPositionMode','auto'), hold on
+%figure('Units','inches','Position',[0 0 7.25 7.25],'PaperPositionMode','auto'), hold on
+figure(1),hold on
 
 % C1
-subplot(3,2,1),hold on, grid on, k = 1;
+subplot(2,2,1),hold on, grid on, k = 1;
 xx = S(k).X; xx = xx(~isnan(xx));
 yy = S(k).Y; yy = yy(~isnan(yy));
 
@@ -401,7 +402,7 @@ set(yl2,'Fontsize',9,'Interpreter','Latex')
 set(gca,'Fontsize',9)
 % 
 % Cycloid 2
-subplot(3,2,3), hold on, grid on, k = 2;
+subplot(2,2,3), hold on, grid on, k = 2;
 xx = S(k).X; xx = xx(~isnan(xx));
 yy = S(k).Y; yy = yy(~isnan(yy));
 plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
@@ -420,28 +421,28 @@ set(yl2,'Fontsize',9,'Interpreter','Latex')
 
 set(gca,'Fontsize',9)
 
-% Cycloid 3
-subplot(3,2,5), hold on, grid on, k = 3;
-xx = S(k).X; xx = xx(~isnan(xx));
-yy = S(k).Y; yy = yy(~isnan(yy));
-plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
-% plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
-% plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
-xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
-
-tit = title('Cycloid 3');
-yl2 = ylabel('Propagation rate [m/s]');
-%le2 = legend ('Model','Mean Results','Hoppa 1999');
-
-set(tit,'Fontsize',9,'Interpreter','Latex')
-set(xl2,'Fontsize',9,'Interpreter','Latex')
-set(yl2,'Fontsize',9,'Interpreter','Latex')
-%set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
-
-set(gca,'Fontsize',9)
+% % Cycloid 3
+% subplot(3,2,5), hold on, grid on, k = 3;
+% xx = S(k).X; xx = xx(~isnan(xx));
+% yy = S(k).Y; yy = yy(~isnan(yy));
+% plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
+% % plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
+% % plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
+% xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
+% 
+% tit = title('Cycloid 3');
+% yl2 = ylabel('Propagation rate [m/s]');
+% %le2 = legend ('Model','Mean Results','Hoppa 1999');
+% 
+% set(tit,'Fontsize',9,'Interpreter','Latex')
+% set(xl2,'Fontsize',9,'Interpreter','Latex')
+% set(yl2,'Fontsize',9,'Interpreter','Latex')
+% %set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
+% 
+% set(gca,'Fontsize',9)
 
 % Delphi Flexus
-subplot(3,2,2), hold on, grid on, k = 4;
+subplot(2,2,2), hold on, grid on, k = 4;
 xx = S(k).X; xx = xx(~isnan(xx));
 yy = S(k).Y; yy = yy(~isnan(yy));
 plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
@@ -451,37 +452,37 @@ xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
 
 tit = title('Delphi Flexus');
 %yl2 = ylabel('Propagation rate [km/hr]');
-le2 = legend ('Model','Mean Results','Hoppa 1999');
-
-set(tit,'Fontsize',9,'Interpreter','Latex')
-set(xl2,'Fontsize',9,'Interpreter','Latex')
-%set(yl2,'Fontsize',9,'Interpreter','Latex')
-set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthWest')
-
-set(gca,'Fontsize',9)
-
-% Sidon Flexus
-subplot(3,2,4), hold on, grid on, k = 5;
-xx = S(k).X; xx = xx(~isnan(xx));
-yy = S(k).Y; yy = yy(~isnan(yy));
-plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
-% plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
-% plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
-xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
-
-tit = title('Sidon Flexus');
-%yl2 = ylabel('Propagation rate [km/hr]');
 %le2 = legend ('Model','Mean Results','Hoppa 1999');
 
 set(tit,'Fontsize',9,'Interpreter','Latex')
 set(xl2,'Fontsize',9,'Interpreter','Latex')
 %set(yl2,'Fontsize',9,'Interpreter','Latex')
-%set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
+%set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthWest')
 
 set(gca,'Fontsize',9)
 
+% % Sidon Flexus
+% subplot(2,2,4), hold on, grid on, k = 5;
+% xx = S(k).X; xx = xx(~isnan(xx));
+% yy = S(k).Y; yy = yy(~isnan(yy));
+% plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
+% % plot(CRACK(k).XX,mean(CRACK(k).PROPAGATION_RATES).*ones(size(CRACK(k).XX)))
+% % plot(CRACK(k).XX,3.*ones(size(CRACK(k).XX)))
+% xl2 = xlabel('Longitude [deg]'); xlim([min(xx),max(xx)]);
+% 
+% tit = title('Sidon Flexus');
+% %yl2 = ylabel('Propagation rate [km/hr]');
+% %le2 = legend ('Model','Mean Results','Hoppa 1999');
+% 
+% set(tit,'Fontsize',9,'Interpreter','Latex')
+% set(xl2,'Fontsize',9,'Interpreter','Latex')
+% %set(yl2,'Fontsize',9,'Interpreter','Latex')
+% %set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
+% 
+% set(gca,'Fontsize',9)
+
 % Cilicia Flexus
-subplot(3,2,6), hold on, grid on, k = 6;
+subplot(2,2,4), hold on, grid on, k = 6;
 xx = S(k).X; xx = xx(~isnan(xx));
 yy = S(k).Y; yy = yy(~isnan(yy));
 plot(CRACK(k).XX(1:length(CRACK(k).PROPAGATION_RATES)),CRACK(k).PROPAGATION_RATES)
@@ -499,13 +500,19 @@ set(xl2,'Fontsize',9,'Interpreter','Latex')
 %set(le2,'Fontsize',9,'Interpreter','Latex','Location','NorthEast')
 
 set(gca,'Fontsize',9)
-% 
-% figure, scatter (CRACK(1).XX,CRACK(1).YY,8,CRACK(1).STANDBY,'filled'),colorbar
-% figure, scatter (CRACK(2).XX,CRACK(2).YY,8,CRACK(2).STANDBY,'filled'),colorbar
-% figure, scatter (CRACK(3).XX,CRACK(3).YY,8,CRACK(3).STANDBY,'filled'),colorbar
-% figure, scatter (CRACK(4).XX,CRACK(4).YY,8,CRACK(4).STANDBY,'filled'),colorbar
-% figure, scatter (CRACK(5).XX,CRACK(5).YY,8,CRACK(5).STANDBY,'filled'),colorbar
-% figure, scatter (CRACK(6).XX,CRACK(6).YY,8,CRACK(6).STANDBY,'filled'),colorbar
+
+figure, scatter (CRACK(1).XX(1:length(CRACK(1).PROPAGATION_RATES)),CRACK(1).YY(1:length(CRACK(1).PROPAGATION_RATES)),8,...
+    CRACK(1).STANDBY,'filled'),colorbar
+figure, scatter (CRACK(2).XX(1:length(CRACK(2).PROPAGATION_RATES)),CRACK(2).YY(1:length(CRACK(2).PROPAGATION_RATES)),8,...
+    CRACK(2).STANDBY,'filled'),colorbar
+figure, scatter (CRACK(3).XX(1:length(CRACK(3).PROPAGATION_RATES)),CRACK(3).YY(1:length(CRACK(3).PROPAGATION_RATES)),8,...
+    CRACK(3).STANDBY,'filled'),colorbar
+figure, scatter (CRACK(4).XX(1:length(CRACK(4).PROPAGATION_RATES)),CRACK(4).YY(1:length(CRACK(4).PROPAGATION_RATES)),8,...
+    CRACK(4).STANDBY,'filled'),colorbar
+figure, scatter (CRACK(5).XX(1:length(CRACK(5).PROPAGATION_RATES)),CRACK(5).YY(1:length(CRACK(5).PROPAGATION_RATES)),8,...
+    CRACK(5).STANDBY,'filled'),colorbar
+figure, scatter (CRACK(6).XX(1:length(CRACK(6).PROPAGATION_RATES)),CRACK(6).YY(1:length(CRACK(6).PROPAGATION_RATES)),8,...
+    CRACK(6).STANDBY,'filled'),colorbar
 
 %     figure,
 %     loglog(CRACK(k).TIME./(3600*24*30),CRACK(k).PROPAGATION_RATES)
@@ -532,3 +539,22 @@ set(gca,'Fontsize',9)
 % c = colorbar;
 % c.FontName = 'Helvetica';
 % c.Location = 'EastOutside';
+
+% figure(10),hold on
+% set(figure(10),'units','pixels','position',[0,500,1000,500])
+% axesm ('eqdcylin', 'Frame', 'on', 'Grid', 'on','MapLatLim',[-75,75],'MapLonLim',[-360,0]);
+% framem on, gridm on, mlabel on, plabel on
+% [lon,lat] = meshgrid(phi,theta); 
+% geoshow(lat,lon+180,raster);
+% geoshow([S(:).Y],[S(:).X]+180,...
+%     'DisplayType','Point','Marker','o','Color','red')
+% 
+% for i= 1:6
+%     textm ([S(i).Y(1)],[S(i).X(1)]+180,num2str(i))
+% end
+
+% %% Bar plot
+% VECT = [max(CRACK(1).PROPAGATION_RATES),CRACK(1).LENGTH/CRACK(1).TIME(end-1);
+% max(CRACK(2).PROPAGATION_RATES),CRACK(2).LENGTH/CRACK(2).TIME(end-1);
+% max(CRACK(5).PROPAGATION_RATES),CRACK(5).LENGTH/CRACK(5).TIME(end-1);
+% max(CRACK(6).PROPAGATION_RATES),CRACK(6).LENGTH/CRACK(6).TIME(end-1)];
