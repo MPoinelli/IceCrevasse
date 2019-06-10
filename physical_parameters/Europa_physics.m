@@ -13,7 +13,7 @@ w = deg2rad(345);                  % [rad]   argument of pericenter
 T_ns_years = 10e7;             % [years] period of Non-Synchronous rotation
 T_ns = T_ns_years*365*24*3600; % [sec]   same as above
 R = 1562000;                   % [m]     radius of Europa
-epsilon = deg2rad(0.5);        % [rad]   obliquity
+epsilon = deg2rad(0.1);        % [rad]   obliquity [Bills, 2005]
 g = 1.315;                     % [m/s2]  gravity at the surface
 Mass = 4.7998e22;              % [Kg]    mass of Europa
 
@@ -22,7 +22,7 @@ Bulk_Modulus = 9.3e9;    % [Pa]  Bulk modulus
 mu = 3.487e9;            % [Pa]  rigidity 
 E = 9*Bulk_Modulus*mu/...
     (3*Bulk_Modulus+mu); % [Pa]  Youngs modulus
-eta = 10^22;             % [Pas] Viscosity
+eta = 10^21;             % [Pas] Viscosity
 nu = E/(2*mu)-1;         % [~]   Poisson ratio
 
 h_d = 1.151;           % Love number diurnal
