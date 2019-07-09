@@ -21,6 +21,7 @@ figure(1),hold on
 set(figure(1),'units','pixels','position',[0,500,1000,500])
 %axesm ('eqdcylin', 'Frame', 'on', 'GrCRAid', 'on','MapLatLim',[-75,75],'MapLonLim',[-360,0]);
 %framem on, gridm on, mlabel on, plabel on
+axesm eqdcylin
 [lon,lat] = meshgrid(phi,theta);
 geoshow(lat,lon,raster);
 geoshow([S_new(:).Y],[S_new(:).X],...
@@ -32,4 +33,6 @@ S_new(2).X(:) = S_new(2).X(:)+180;
 S_new(3).X(:) = S_new(3).X(:)+180;
 S_new(4).X(:) = S_new(4).X(:)+180;
 
-%shapewrite(S_new,'Cycloids_lon_lat.shp')
+for i= 1:4
+    textm ([S_new(i).Y(1)],[S_new(i).X(1)],num2str(i))
+end
