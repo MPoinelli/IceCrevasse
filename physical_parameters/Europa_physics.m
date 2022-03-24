@@ -1,15 +1,21 @@
 % Physical parameters of Europa
 % from Jara-Orue&Vermeersen, 2011 
 
+global G
+
 G = 6.67408e-11; % [m3 kg-1 s-2] gravitational constant
 
 %% Orbital parameters
+global n T_europa e w
+
 n = deg2rad(101.37472)/(60*60*24); % [rad/s] mean motion
 T_europa = 2*pi/n;                 % [sec]   orbital period
 e = 0.0094;                        % [~]     eccentricity
 w = deg2rad(345);                  % [rad]   argument of pericenter 
 
 %% Physical parameters
+global T_ns_years T_ns R epsilon g Mass
+
 T_ns_years = 10e7;             % [years] period of Non-Synchronous rotation
 T_ns = T_ns_years*365*24*3600; % [sec]   same as above
 R = 1562000;                   % [m]     radius of Europa
@@ -18,6 +24,8 @@ g = 1.315;                     % [m/s2]  gravity at the surface
 Mass = 4.7998e22;              % [Kg]    mass of Europa
 
 %% Rheology of the Crust
+global Bulk_Modulus mu E eta nu h_d l_d h_s l_s
+
 Bulk_Modulus = 9.3e9;    % [Pa]  Bulk modulus
 mu = 3.487e9;            % [Pa]  rigidity 
 E = 9*Bulk_Modulus*mu/...
