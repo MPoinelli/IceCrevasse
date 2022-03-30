@@ -26,7 +26,10 @@ function [sigma_theta,sigma_phi,tau] = diurnal_stress (theta,phi,n,e,w,t,epsilon
 % sigma_phi:   longitudinal stress  [Pa]
 % tau:         shear stress         [Pa]
 
-% Constant
+% Declare gloabl variables
+global Lambda Z
+
+% Define global variables
 Lambda = (mu/eta)/n;
 Z = 0.5 * (n^2*R*mu)/(g*sqrt(1+Lambda^2));
 
