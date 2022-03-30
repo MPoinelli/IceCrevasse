@@ -24,7 +24,10 @@ function [sigma_theta,sigma_phi,tau] = secular_stress (theta,phi,n,t,T_ns,g,R,mu
 % sigma_phi:   longitudinal stress  [Pa]
 % tau:         shear stress         [Pa]
 
-% Constants
+% Declare global variables
+global Delta Z
+
+% Define global variables
 Delta = T_ns/(4*pi*(eta/mu));
 Z = 0.5 * (n^2*R*mu)/(g*sqrt(1+Delta^2));
 
