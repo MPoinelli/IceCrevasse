@@ -20,3 +20,8 @@ If you use this code, please cite:
 Poinelli, M., Larour, E., Castillo-Rogez, J. and Vermeersen, B. (2019) Crevasse propagation on brittle ice: Application to cycloids on Europa.Geophysical Research Letters,46, https://doi.org/10.1029/2019GL084033
 
 [Figure1.pdf](https://github.com/MPoinelli/IceCrevasse/files/8460756/Figure1.pdf)
+
+
+
+TODO::
+- upload test routines
