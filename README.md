@@ -24,4 +24,5 @@ Poinelli, M., Larour, E., Castillo-Rogez, J. and Vermeersen, B. (2019) Crevasse 
 
 
 TODO::
-- upload test routines
+- upload test routines from local
+- create example file (runme.m)
